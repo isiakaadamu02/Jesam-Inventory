@@ -54,13 +54,32 @@ export interface DashboardMetrics {
 export const api = createApi({
     baseQuery: fetchBaseQuery({baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL}),
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics"],
+    tagTypes: ["DashboardMetrics", "Products"],
     endpoints: (build) => ({
         getDashboardMetrics: build.query<DashboardMetrics, void>({
             query: () => "/dashboard",
             providesTags: ["DashboardMetrics"]
+        }),
+
+        getProducts: build.query<Product[], string | void>({
+            query: (search) => ({
+              url: "/products",
+              params: search ? { search } : {}
+            }),
+            providesTags: ["Products"],
+        }),
+
+        //mutation call
+        creadteProduct: build.mutation<Product, NewProduct>({
+          query: (newProduct) => ({
+            url: "/products",
+            method: "POST",
+            body: newProduct
+          }),
+          //anytime we create a product, another api request send immediately grabbing a new list of products or fetch the new list of products after creating a product
+          invalidatesTags: ["Products"]
         })
     }),
 });
 
-export const { useGetDashboardMetricsQuery } = api;
+export const { useGetDashboardMetricsQuery, useGetProductsQuery, useCreadteProductMutation } = api;
