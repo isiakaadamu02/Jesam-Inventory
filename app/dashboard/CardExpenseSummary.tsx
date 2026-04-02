@@ -7,10 +7,10 @@ type ExpenseSums = {
     [category: string]: number;
 }
 
-const colors = ["#00C4F", "#0088FE", "#FFBB28"]
+const colors = ["#00C49F", "#0088FE", "#FFBB28"]
 
 const CardExpenseSummary = () => {
-    const { data:dashboardMetrics, isLoading } = useGetDashboardMetricsQuery();
+    const { data: dashboardMetrics, isLoading } = useGetDashboardMetricsQuery();
 
     const expenseSummary = dashboardMetrics?.expenseSummary[0];
 
@@ -22,7 +22,7 @@ const CardExpenseSummary = () => {
         if (!acc[category]) acc[category] = 0;
         acc[category] += amount;
         return acc;
-    }, {})
+    }, {});
 
     const expenseCategories = Object.entries(expenseSums).map(
         ([name, value]) => ({
@@ -50,10 +50,11 @@ const CardExpenseSummary = () => {
             </div>
 
             {/* BODY */}
-            <div className='xl:flex justify-between pr-7'></div>
+            <div className='xl:flex justify-between pr-7'>
 
+            {/* CHART */}
             <div className='relative basis-3/5'>
-                <ResponsiveContainer width="100%" height={200} className="p-2">
+                <ResponsiveContainer width="100%" height={140} >
                     <PieChart>
                         <Pie 
                             data={expenseCategories} 
@@ -72,6 +73,7 @@ const CardExpenseSummary = () => {
 
                 <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'>
                     <span className='font-bold text-xl'>${formattedTotalExpenses}</span>
+                </div>
                 </div>
 
                 {/* LABELS */}
