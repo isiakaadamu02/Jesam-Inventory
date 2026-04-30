@@ -6,6 +6,7 @@ export interface Product {
   price: number;
   rating?: number;
   stockQuantity: number;
+  imageUrl?: string; 
 }
 
 export interface NewProduct {

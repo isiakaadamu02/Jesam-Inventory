@@ -69,6 +69,19 @@ const Products = () => {
                     className="border shadow rounded-md p-4 max-w-full w-full mx-auto"
                 >
                     <div className="flex flex-col items-center">
+                        <div className="flex flex-col items-center">
+                            {product.imageUrl ? (
+                                <img
+                                src={product.imageUrl}
+                                alt={product.name}
+                                className="mb-3 rounded-md w-36 h-36 object-cover"
+                                />
+                            ) : (
+                                <div className="mb-3 w-36 h-36 bg-gray-100 rounded-md flex items-center justify-center text-gray-400 text-sm">
+                                No image
+                                </div>
+                            )}
+                        </div>
                         img
                         <h3 className="text-lg text-gray-900 font-semibold">{product.name}</h3>
                         <p className="text-gray-800">${product.price.toFixed(2)}</p>

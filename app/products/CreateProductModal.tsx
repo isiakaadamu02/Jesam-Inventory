@@ -24,6 +24,9 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
         rating: 0,
     });
 
+     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setFormData({
@@ -32,10 +35,23 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
         })
     }
 
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] ?? null;
+        setImageFile(file);
+        // Revoke previous preview URL to avoid memory leaks
+        if (preview) URL.revokeObjectURL(preview);
+        setPreview(file ? URL.createObjectURL(file) : null);
+    };
+
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         onCreate(formData);
         onClose();
+
+        // Reset form
+        setFormData({ productId: v4(), name: "", price: 0, stockQuantity: 0, rating: 0 });
+        setImageFile(null);
+        setPreview(null);
     }
 
     if(!isOpen) return null;
@@ -103,6 +119,32 @@ const CreateProductModal = ({ isOpen, onClose, onCreate }: CreateProductModalPro
             className={inputCssStyles}
             required
           />
+
+           {/* IMAGE UPLOAD */}
+                    <label className={labelCssStyles}>Product Image</label>
+                    <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={handleImageChange}
+                        className={inputCssStyles}
+                    />
+                    {/* PREVIEW */}
+                    {preview && (
+                        <div className="mb-2 relative">
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className="w-full h-40 object-cover rounded-md border border-gray-300"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => { setImageFile(null); setPreview(null); }}
+                                className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded hover:bg-red-700"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    )}
 
            {/* CREATE ACTIONS */}
           <button
